@@ -2,15 +2,45 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
+	"os"
+	"path"
+	"runtime"
 	"flag"
 )
 
-func parse_args() string {
+func parseArgs() []string {
+
 	input := flag.String("input", "input.txt", "input file (.txt) to be read")
 	flag.Parse()
-	return *input
+	_, currentFilePath, _, _ := runtime.Caller(0)
+	dirPath := path.Dir(currentFilePath)
+	inputPath := path.Join(dirPath, *input)
+	inputFile, err := os.Open(inputPath)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	scanner := bufio.NewScanner(inputFile)
+	scanner.Split(bufio.ScanLines)
+	var fileLines []string
+
+	for scanner.Scan() {
+		fileLines = append(fileLines, scanner.Text())
+	}
+	inputFile.Close()
+	return fileLines
+}
+
+func runP1() {
+	return
+}
+
+func runP2() {
+	return
 }
 
 func main() {
-	input := parse_args()
+	lines := parseArgs()
 }
