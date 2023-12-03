@@ -2,13 +2,14 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
-	"strconv"
+	"path"
 	"regexp"
-	"io"
+	"runtime"
+	"strconv"
 )
-
 
 func extractDigitsP1(line string) string {
 	var first string
@@ -70,35 +71,32 @@ func extractDigitsP2(line string) string {
 	return first + second
 }
 
-
-func main() {
-	
-	if len(os.Args) < 1 {
-        fmt.Println("Usage : " + os.Args[0] + " file name")
-        os.Exit(1)
-    }
-
-    file, err := ioutil.ReadFile(os.Args[1])
-    if err != nil {
-        fmt.Println("Cannot read the file")
-        os.Exit(1)
-    }
-    // do something with the file
-    fmt.Print(string(file))
-
-	file, err := os.Open(fName)
+func parseArgs() []string {
+	input := flag.String("input", "input.txt", "input file (.txt) to be read")
+	flag.Parse()
+	_, currentFilePath, _, _ := runtime.Caller(0)
+	dirPath := path.Dir(currentFilePath)
+	inputPath := path.Join(dirPath, *input)
+	inputFile, err := os.Open(inputPath)
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
-	defer file.Close()
-	
-	scanner := bufio.NewScanner(file)
-	sum := 0
+	scanner := bufio.NewScanner(inputFile)
+	scanner.Split(bufio.ScanLines)
+	var fileLines []string
 
 	for scanner.Scan() {
-		line := scanner.Text()
-		digits := extractDigitsP2(line)
-		// fmt.Println("digit: " + digits)
+		fileLines = append(fileLines, scanner.Text())
+	}
+	inputFile.Close()
+	return fileLines
+}
+
+func runP1(lines []string) {
+	sum := 0
+	for _, line := range lines {
+		digits := extractDigitsP1(line)
 		if digits != "" {
 			digitVal, err := strconv.Atoi(digits)
 			if err == nil {
@@ -106,10 +104,26 @@ func main() {
 			}
 		}
 	}
+	fmt.Printf("part 1: %d\n", sum)
+}
 
-	if err := scanner.Err(); err != nil {
-		panic(err)
+func runP2(lines []string) {
+	sum := 0
+	for _, line := range lines {
+		digits := extractDigitsP2(line)
+		if digits != "" {
+			digitVal, err := strconv.Atoi(digits)
+			if err == nil {
+				sum += digitVal
+			}
+		}
 	}
+	fmt.Printf("part 2: %d\n", sum)
+}
 
-	fmt.Printf("sum: %d\n", sum)
+func main() {
+
+	lines := parseArgs()
+	runP1(lines)
+	runP2(lines)
 }
