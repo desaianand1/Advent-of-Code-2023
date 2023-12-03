@@ -12,8 +12,6 @@ function New-Day {
     $Year = (Get-Date).Year
     $Domain = "adventofcode.com"
     $InputURL = "https://www.$Domain/$Year/day/$Day/input"
-    Write-Output  "url: $InputURL"
-
     $DayOutputDir = "day$Day"
     if (Test-Path $DayOutputDir) {
         # if directory already exists, stop
