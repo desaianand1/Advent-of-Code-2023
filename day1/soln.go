@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"regexp"
+	"io"
 )
 
 
@@ -71,14 +72,26 @@ func extractDigitsP2(line string) string {
 
 
 func main() {
-	// f_name := "input/test.txt"
-	f_name := "input/input.txt"
-	file, err := os.Open(f_name)
+	
+	if len(os.Args) < 1 {
+        fmt.Println("Usage : " + os.Args[0] + " file name")
+        os.Exit(1)
+    }
+
+    file, err := ioutil.ReadFile(os.Args[1])
+    if err != nil {
+        fmt.Println("Cannot read the file")
+        os.Exit(1)
+    }
+    // do something with the file
+    fmt.Print(string(file))
+
+	file, err := os.Open(fName)
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
-
+	
 	scanner := bufio.NewScanner(file)
 	sum := 0
 

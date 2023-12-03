@@ -1,8 +1,9 @@
 # 🎄 Advent of Code 2023 📅
 
-![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)    ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 My attempt at Advent of Code 2023, learning Go lang while at it
+
 > Note: On some days I had to fallback to Python to bypass Go's RE2 Regex implementation choice which prevents lookahead/lookbehind assertions
 
 ## Table of Contents
@@ -18,33 +19,33 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 
 ## Overview <a name="overview"></a>
 
-| Day | Name        | Stars |
-| --- | ----------- | ----- |
-| 01  | Trebuchet?! | ⭐⭐ |
-| 02  |             |       |
-| 03  |             |       |
-| 04  |             |       |
-| 05  |             |       |
-| 06  |             |       |
-| 07  |             |       |
-| 08  |             |       |
-| 09  |             |       |
-| 10  |             |       |
-| 11  |             |       |
-| 12  |             |       |
-| 13  |             |       |
-| 14  |             |       |
-| 15  |             |       |
-| 16  |             |       |
-| 17  |             |       |
-| 18  |             |       |
-| 19  |             |       |
-| 20  |             |       |
-| 21  |             |       |
-| 22  |             |       |
-| 23  |             |       |
-| 24  |             |       |
-| 25  |             |       |
+| Day | Name           | Stars |
+| --- | -------------- | ----- |
+| 01  | Trebuchet?!    | ⭐⭐ |
+| 02  | Cube Conundrum | ⭐⭐ |
+| 03  |                |       |
+| 04  |                |       |
+| 05  |                |       |
+| 06  |                |       |
+| 07  |                |       |
+| 08  |                |       |
+| 09  |                |       |
+| 10  |                |       |
+| 11  |                |       |
+| 12  |                |       |
+| 13  |                |       |
+| 14  |                |       |
+| 15  |                |       |
+| 16  |                |       |
+| 17  |                |       |
+| 18  |                |       |
+| 19  |                |       |
+| 20  |                |       |
+| 21  |                |       |
+| 22  |                |       |
+| 23  |                |       |
+| 24  |                |       |
+| 25  |                |       |
 
 ## Setup <a name="setup"></a>
 
@@ -58,7 +59,7 @@ I solved most of this year's problems in Go, and a few in Python. To get started
 
 ### 🍪 Session Cookies <a name="cookie"></a>
 
-The ```new_day.ps1``` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input etc.
+The `new_day.ps1` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input etc.
 
 To get your own cookie, visit [Advent of Code](https://adventofcode.com/). Once logged in:
 
@@ -70,14 +71,14 @@ To get your own cookie, visit [Advent of Code](https://adventofcode.com/). Once 
 
 - Right-click and select "Inspect Element". In the "Application" tab, under "Storage", expand "Cookies" and select `https://adventofcode.com`. Copy the cookie titled "session"
 
-Paste your session cookie data into your ```.env``` file. (```.env.example``` provides a structural example)
+Paste your session cookie data into your `.env` file. (`.env.example` provides a structural example)
 
 ### 📆 Generating a New Day <a name="new-day"></a>
 
-- Add your [Advent of Code session cookie](#cookie) to the ```.env``` file.
+- Add your [Advent of Code session cookie](#cookie) to the `.env` file.
 
-- Run ```new_day.ps1``` to create the current day's directory
-- Run ```new_day.ps1 <d>``` where ```<d>``` is a day between 1 - 25 to create the that day's directory (if it doesn't already exist)
+- Run `new_day.ps1` to create the current day's directory
+- Run `new_day.ps1 <d>` where `<d>` is a day between 1 - 25 to create the that day's directory (if it doesn't already exist)
 
 > Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year)
 
@@ -85,7 +86,7 @@ Paste your session cookie data into your ```.env``` file. (```.env.example``` pr
 
 ## Running Code <a name="run-code">></a>
 
-To run the code for day ```d```, execute the following, replacing ```<d>``` with the specific day (e.g. 1 - 25)
+To run the code for day `d`, execute the following, replacing `<d>` with the specific day (e.g. 1 - 25)
 
-- Go: ```go run day<d>/soln.go```
-- Python: ```python day<d>/soln.py```
+- Go: `go run day<d>/soln.go`
+- Python: `python day<d>/soln.py`
