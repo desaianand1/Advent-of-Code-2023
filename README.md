@@ -77,6 +77,7 @@ Paste your session cookie data into your ```.env``` file. (```.env.example``` pr
 - Add your [Advent of Code session cookie](#cookie) to the ```.env``` file.
 
 - Run ```new_day.ps1``` to create the current day's directory
+- Run ```new_day.ps1 <d>``` where ```<d>``` is a day between 1 - 25 to create the that day's directory (if it doesn't already exist)
 
 > Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year)
 
@@ -84,7 +85,7 @@ Paste your session cookie data into your ```.env``` file. (```.env.example``` pr
 
 ## Running Code <a name="run-code">></a>
 
-To run the code for day ```dd```, execute the following, replacing ```<dd>``` with the specific day (e.g. 01 - 25)
+To run the code for day ```d```, execute the following, replacing ```<d>``` with the specific day (e.g. 1 - 25)
 
-- Go: ```go run day<dd>/day<dd>.go```
-- Python: ```python day<dd>/day<dd>.py```
+- Go: ```go run day<d>/soln.go```
+- Python: ```python day<d>/soln.py```
