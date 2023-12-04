@@ -118,12 +118,13 @@ func runP2(lines []string) {
 			}
 		}
 	}
+
 	fmt.Printf("part 2: %d\n", sum)
 }
 
 func main() {
-
-	lines := parseArgs()
-	runP1(lines)
-	runP2(lines)
+	panic("Only a Python solution was used for this day!")
+	// lines := parseArgs()
+	// runP1(lines)
+	// runP2(lines)
 }
