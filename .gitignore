@@ -8,6 +8,9 @@
 *.so
 *.dylib
 
+# Ignore input.txt
+input.txt
+
 # Env
 .env
 !.env.example
