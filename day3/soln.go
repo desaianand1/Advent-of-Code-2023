@@ -36,79 +36,63 @@ func parseArgs() []string {
 	return fileLines
 }
 
-// key is unique suffix added to numbers (in case a symbol's 8-direction has the same number taking up multiple 'slots')
-// this way two of the same numbers appearing around same symbol are considered uniquely discernable
 func findCompleteNumbers_Keyed(lines []string) map[string]string {
-	var idxNumMap = make(map[string]string)
+
+	idxNumMap := make(map[string]string)
+
 	for i, line := range lines {
-		isConstructingNum := false
+		var numIdxs []string
 		constructedNum := ""
-		var numIdxs [200]string
-		z := 0
 
 		for j, ch := range line {
 			isNum := isDigit(ch)
-			if isConstructingNum {
-				if isNum {
-					numIdxs[z] = fmt.Sprintf("%d,%d", i, j)
-					z++
-					constructedNum += string(ch)
-				} else {
-					// add unique suffix to numbers (in case a symbol's 8-direction has the same number taking up multiple 'slots')
-					// this way two of the same numbers appearing around same symbol are considered uniquely discernable
-					keyedNum := constructedNum + fmt.Sprintf(";key%d,%d", i, j)
-					for _, idx := range numIdxs {
-						idxNumMap[idx] = keyedNum
-					}
-					isConstructingNum = false
-					z = 0
-					numIdxs = [200]string{}
-					constructedNum = ""
-				}
-			} else {
-				if isNum {
-					numIdxs[z] = fmt.Sprintf("%d,%d", i, j)
-					z++
-					constructedNum += string(ch)
-					isConstructingNum = true
-				}
-			}
 
-			if j == len(line)-1 && isConstructingNum {
-				// add unique suffix to numbers (in case a symbol's 8-direction has the same number taking up multiple 'slots')
-				// this way two of the same numbers appearing around same symbol are considered uniquely discernable
+			if isNum {
+				numIdxs = append(numIdxs, fmt.Sprintf("%d,%d", i, j))
+				constructedNum += string(ch)
+			} else if constructedNum != "" {
+				// add unique suffix to numbers for discernability
 				keyedNum := constructedNum + fmt.Sprintf(";key%d,%d", i, j)
 				for _, idx := range numIdxs {
 					idxNumMap[idx] = keyedNum
 				}
-				isConstructingNum = false
-				z = 0
+				numIdxs = nil
 				constructedNum = ""
 			}
+		}
 
+		// Check for any remaining constructed number at the end of the line
+		if constructedNum != "" {
+			keyedNum := constructedNum + fmt.Sprintf(";key%d,%d", i, len(line)-1)
+			for _, idx := range numIdxs {
+				idxNumMap[idx] = keyedNum
+			}
 		}
 	}
+
 	return idxNumMap
 }
 
 func isSymbol(char rune) bool {
-	return !(isDigit(char) || char == '.')
+	return !isDigit(char) && char != '.'
 }
 
 func isDigit(char rune) bool {
 	return unicode.IsDigit(char)
 }
 
-func unlockCompleteNumber(keyedNum string) int {
+func unlockCompleteNumber(keyedNum string) (int, error) {
 	parts := strings.Split(keyedNum, ";key")
 	if len(parts) < 2 {
-		fmt.Printf("something wrong with keyed num!: %v | keyedNum: %s\n", parts, keyedNum)
+		return 0, fmt.Errorf("something wrong with keyed num!: %v | keyedNum: %s", parts, keyedNum)
 	}
+
 	num, err := strconv.Atoi(parts[0])
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
+		return 0, fmt.Errorf("error converting string to integer: %v", err)
 	}
-	return num
+
+	return num, nil
 }
 
 func deleteAllKeysForKeyedNumber(numIdxMap map[string]string, keyedNum string) {
@@ -122,6 +106,7 @@ func deleteAllKeysForKeyedNumber(numIdxMap map[string]string, keyedNum string) {
 func runP1(lines []string) int {
 	numIdxMap := findCompleteNumbers_Keyed(lines)
 	sum := 0
+
 	for i, line := range lines {
 		for j, ch := range line {
 			if isSymbol(ch) {
@@ -136,26 +121,33 @@ func runP1(lines []string) int {
 					fmt.Sprintf("%d,%d", i+1, j+1),
 				}
 				keyedNumSet := mapset.NewSet[string]()
+
 				for _, neighbor := range neighbors {
-					keyedNum, numberIsNeighbor := numIdxMap[neighbor]
-					if numberIsNeighbor {
+					if keyedNum, numberIsNeighbor := numIdxMap[neighbor]; numberIsNeighbor {
 						keyedNumSet.Add(keyedNum)
 						deleteAllKeysForKeyedNumber(numIdxMap, keyedNum)
 					}
 				}
+
 				for x := range keyedNumSet.Iter() {
-					actualNum := unlockCompleteNumber(x)
+					actualNum, err := unlockCompleteNumber(x)
+					if err != nil {
+						fmt.Printf("Error unlocking complete number: %v\n", err)
+						continue
+					}
 					sum += actualNum
 				}
 			}
 		}
 	}
+
 	return sum
 }
 
 func runP2(lines []string) int {
 	numIdxMap := findCompleteNumbers_Keyed(lines)
 	sum := 0
+
 	for i, line := range lines {
 		for j, ch := range line {
 			if isSymbol(ch) {
@@ -169,26 +161,36 @@ func runP2(lines []string) int {
 					fmt.Sprintf("%d,%d", i+1, j-1),
 					fmt.Sprintf("%d,%d", i+1, j+1),
 				}
+
 				gearPair := make([]string, 2)
 				count := 0
+
 				for _, neighbor := range neighbors {
-					keyedNum, numberIsNeighbor := numIdxMap[neighbor]
-					if numberIsNeighbor {
+					if keyedNum, numberIsNeighbor := numIdxMap[neighbor]; numberIsNeighbor {
 						if count >= 2 {
 							gearPair = gearPair[:0]
 							break
-						} else {
-							gearPair[count] = keyedNum
-							deleteAllKeysForKeyedNumber(numIdxMap, keyedNum)
-							count++
 						}
 
+						gearPair[count] = keyedNum
+						deleteAllKeysForKeyedNumber(numIdxMap, keyedNum)
+						count++
 					}
 				}
+
 				if count == 2 && len(gearPair) != 0 {
 					gp1, gp2 := gearPair[0], gearPair[1]
-					p1 := unlockCompleteNumber(gp1)
-					p2 := unlockCompleteNumber(gp2)
+					p1, err := unlockCompleteNumber(gp1)
+					if err != nil {
+						fmt.Printf("Error unlocking complete number: %v\n", err)
+						continue
+					}
+
+					p2, err := unlockCompleteNumber(gp2)
+					if err != nil {
+						fmt.Printf("Error unlocking complete number: %v\n", err)
+						continue
+					}
 					sum += p1 * p2
 				}
 			}
