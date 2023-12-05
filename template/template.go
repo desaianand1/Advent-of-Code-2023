@@ -3,11 +3,11 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"path"
 	"runtime"
-	"flag"
 )
 
 func parseArgs() []string {

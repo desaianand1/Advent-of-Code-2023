@@ -17,7 +17,7 @@ function New-Day {
         # if directory already exists, stop
         Write-Error -Message "$DayOutputDir already exists! Cannot create new day's files" -ErrorAction Break        
     }
-    New-Item -Path "/" -Name $DayOutputDir -ItemType Directory
+    New-Item -Path . -Name $DayOutputDir -ItemType Directory
     $DayInputFile = Join-Path -Path $DayOutputDir -ChildPath $InputFileName
     if (Test-Path $DayInputFile) {
         Write-Error -Message "Cannot create input file since $DayInputFile already exists!" -ErrorAction Break
@@ -29,11 +29,14 @@ function New-Day {
     # Copy template files to current day directory
     $PyTemplate = Join-Path -Path "template" -ChildPath "template.py"
     $GoTemplate = Join-Path -Path "template" -ChildPath "template.go"
+    $SolnJSONTemplate = Join-Path -Path "template" -ChildPath "soln.json"
     $PyFile = Join-Path -Path $DayOutputDir -ChildPath "soln.py"
     $GoFile = Join-Path -Path $DayOutputDir -ChildPath "soln.go"
+    $SolnJSON = Join-Path -Path $DayOutputDir -ChildPath "soln.json"
 
     Copy-Item $PyTemplate $PyFile
     Copy-Item $GoTemplate $GoFile
+    Copy-Item $SolnJSONTemplate $SolnJSON
 }
 
 function New-Day-Input-File {

@@ -23,8 +23,8 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 | --- | -------------- | ----- |
 | 01  | Trebuchet?!    | ⭐⭐ |
 | 02  | Cube Conundrum | ⭐⭐ |
-| 03  | Gear Ratios    |       |
-| 04  |                |       |
+| 03  | Gear Ratios    | ⭐⭐ |
+| 04  | Scratchcards   | ⭐⭐ |
 | 05  |                |       |
 | 06  |                |       |
 | 07  |                |       |

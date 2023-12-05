@@ -81,7 +81,7 @@ func parseGames(lines []string) []Game {
 	return games
 }
 
-func runP1(games []Game) {
+func runP1(games []Game) int {
 	possibleCubes := Cube{Red: 12, Green: 13, Blue: 14}
 	sum := 0
 	for _, game := range games {
@@ -99,10 +99,10 @@ func runP1(games []Game) {
 			sum = sum + game.id
 		}
 	}
-	fmt.Printf("part 1: %v\n", sum)
+	return sum
 }
 
-func runP2(games []Game) {
+func runP2(games []Game) int {
 	sum := 0
 	for _, game := range games {
 		leastCubesRequired := Cube{Red: 0, Green: 0, Blue: 0}
@@ -121,12 +121,12 @@ func runP2(games []Game) {
 		}
 		sum = sum + power
 	}
-	fmt.Printf("part 2: %v\n", sum)
+	return sum
 }
 
 func main() {
 	lines := parseArgs()
 	games := parseGames(lines)
-	runP1(games)
-	runP2(games)
+	fmt.Printf("part 1: %v\n", runP1(games))
+	fmt.Printf("part 2: %v\n", runP2(games))
 }

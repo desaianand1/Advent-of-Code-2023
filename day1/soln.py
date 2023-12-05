@@ -57,27 +57,27 @@ def parse_args() -> str:
         raise FileNotFoundError(f"Input file {path} not found!")
 
 
-def run_p1(lines: list[str]):
+def run_p1(lines: list[str]) -> int:
     sum = 0
     for line in lines:
         digits = extract_digits_p1(line)
         if digits != "":
             sum = sum + int(digits)
-    print(f"part 1: {sum}")
+    return sum
 
 
-def run_p2(lines: list[str]):
+def run_p2(lines: list[str]) -> int:
     sum = 0
     for line in lines:
         digits = extract_digits_p2(line)
         if digits != "":
             sum = sum + int(digits)
-    print(f"part 2: {sum}")
+    return sum
 
 
 if __name__ == "__main__":
     input = parse_args()
     with open(input) as file:
         lines = file.readlines()
-        run_p1(lines)
-        run_p2(lines)
+        print(f"part 1: {run_p1(lines)}")
+        print(f"part 1: {run_p2(lines)}")
