@@ -6,7 +6,7 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 
 > Note: On some days I had to fallback to Python to bypass Go's RE2 Regex implementation choice which prevents lookahead/lookbehind assertions
 
-**Disclaimer:** ```input.txt```(s) have been omitted ex post facto when I was made aware [they are not to be publicly shared](https://www.reddit.com/r/adventofcode/wiki/troubleshooting/no_asking_for_inputs/).
+**Disclaimer:** ```input.txt```(s) have been omitted ex post facto when I was made aware [they are not to be publicly shared](https://adventofcode.com/about#faq_copying).
 
 ## Table of Contents
 
