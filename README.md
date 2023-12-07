@@ -6,7 +6,7 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 
 > Note: On some days I had to fallback to Python to bypass Go's RE2 Regex implementation choice which prevents lookahead/lookbehind assertions
 
-**Disclaimer:** ```input.txt```(s) have been omitted ex post facto when I was made aware [they are not to be publicly shared](https://adventofcode.com/about#faq_copying).
+**Disclaimer:** `input.txt`(s) have been omitted ex post facto when I was made aware [they are not to be publicly shared](https://adventofcode.com/about#faq_copying).
 
 ## Table of Contents
 
@@ -21,33 +21,33 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 
 ## Overview <a name="overview"></a>
 
-| Day | Name           | Stars |
-| --- | -------------- | ----- |
-| 01  | Trebuchet?!    | ⭐⭐ |
-| 02  | Cube Conundrum | ⭐⭐ |
-| 03  | Gear Ratios    | ⭐⭐ |
-| 04  | Scratchcards   | ⭐⭐ |
-| 05  |                |       |
-| 06  |                |       |
-| 07  |                |       |
-| 08  |                |       |
-| 09  |                |       |
-| 10  |                |       |
-| 11  |                |       |
-| 12  |                |       |
-| 13  |                |       |
-| 14  |                |       |
-| 15  |                |       |
-| 16  |                |       |
-| 17  |                |       |
-| 18  |                |       |
-| 19  |                |       |
-| 20  |                |       |
-| 21  |                |       |
-| 22  |                |       |
-| 23  |                |       |
-| 24  |                |       |
-| 25  |                |       |
+| Day | Name                            | Stars |
+| --- | ------------------------------- | ----- |
+| 01  | Trebuchet?!                     | ⭐⭐  |
+| 02  | Cube Conundrum                  | ⭐⭐  |
+| 03  | Gear Ratios                     | ⭐⭐  |
+| 04  | Scratchcards                    | ⭐⭐  |
+| 05  | If You Give A Seed A Fertilizer | ⭐⭐  |
+| 06  |                                 |       |
+| 07  |                                 |       |
+| 08  |                                 |       |
+| 09  |                                 |       |
+| 10  |                                 |       |
+| 11  |                                 |       |
+| 12  |                                 |       |
+| 13  |                                 |       |
+| 14  |                                 |       |
+| 15  |                                 |       |
+| 16  |                                 |       |
+| 17  |                                 |       |
+| 18  |                                 |       |
+| 19  |                                 |       |
+| 20  |                                 |       |
+| 21  |                                 |       |
+| 22  |                                 |       |
+| 23  |                                 |       |
+| 24  |                                 |       |
+| 25  |                                 |       |
 
 ## Setup <a name="setup"></a>
 
