@@ -33,14 +33,16 @@ func parseArgs() []string {
 	return fileLines
 }
 
-func runP1() {
-	return
+func runP1(lines []string) int {
+	return -1
 }
 
-func runP2() {
-	return
+func runP2(lines []string) int {
+	return -1
 }
 
 func main() {
 	lines := parseArgs()
+	fmt.Printf("part 1: %d\n", runP1(lines))
+	fmt.Printf("part 2: %d\n", runP2(lines))
 }

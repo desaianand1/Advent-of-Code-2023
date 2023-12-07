@@ -118,7 +118,7 @@ def parse_all_mappings(lines):
     return almanac
 
 
-def run_p1(lines):
+def run_p1(lines: List[str]) -> int:
     seeds = parse_seeds(lines[0])
     almanac = parse_all_mappings(lines[1:])
     lowest = float("inf")
@@ -130,7 +130,7 @@ def run_p1(lines):
     return lowest
 
 
-def run_p2(lines):
+def run_p2(lines: List[str]) -> int:
     seeds = parse_seeds(lines[0])
     almanac = parse_all_mappings(lines[1:])
     lowest = float("inf")

@@ -34,18 +34,6 @@ def calculate_matching_numbers(playing_hand: List[str], winning_hand: set) -> in
     return sum(1 for num in playing_hand if num in winning_hand)
 
 
-def run_p1(lines: List[str]) -> int:
-    total_sum = 0
-    for line in lines:
-        _, hands = line.split(":")
-        winning_hand = create_winning_hand(hands.split("|")[0].split())
-        playing_hand = create_playing_hand(hands.split("|")[1].split())
-        points = calculate_matching_numbers(playing_hand, winning_hand)
-        if points != 0:
-            total_sum += 2 ** (points - 1)
-    return total_sum
-
-
 def parse_card_number(card_num_str: str) -> int:
     return int(card_num_str.strip().split("Card")[1])
 
@@ -67,6 +55,18 @@ def process_all_cards(
 
 def count_all_cards(card_count_map: dict[int, int]) -> int:
     return sum(card_count_map.values())
+
+
+def run_p1(lines: List[str]) -> int:
+    total_sum = 0
+    for line in lines:
+        _, hands = line.split(":")
+        winning_hand = create_winning_hand(hands.split("|")[0].split())
+        playing_hand = create_playing_hand(hands.split("|")[1].split())
+        points = calculate_matching_numbers(playing_hand, winning_hand)
+        if points != 0:
+            total_sum += 2 ** (points - 1)
+    return total_sum
 
 
 def run_p2(lines: List[str]) -> int:

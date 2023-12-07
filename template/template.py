@@ -1,5 +1,6 @@
 # AoC Template Python file
 import argparse, os
+from typing import List
 
 
 def parse_args() -> str:
@@ -20,11 +21,11 @@ def parse_args() -> str:
         raise FileNotFoundError(f"Input file {path} not found!")
 
 
-def run_p1():
+def run_p1(lines: List[str]) -> int:
     pass
 
 
-def run_p2():
+def run_p2(lines: List[str]) -> int:
     pass
 
 
@@ -32,3 +33,5 @@ if __name__ == "__main__":
     input = parse_args()
     with open(input) as file:
         lines = file.readlines()
+        print(f"part 1: {run_p1(lines)}")
+        print(f"part 2: {run_p2(lines)}")

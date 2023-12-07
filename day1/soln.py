@@ -1,4 +1,5 @@
 import argparse, os, re
+from typing import List
 
 
 def extract_digits_p1(line: str):
@@ -57,7 +58,7 @@ def parse_args() -> str:
         raise FileNotFoundError(f"Input file {path} not found!")
 
 
-def run_p1(lines: list[str]) -> int:
+def run_p1(lines: List[str]) -> int:
     sum = 0
     for line in lines:
         digits = extract_digits_p1(line)
@@ -66,7 +67,7 @@ def run_p1(lines: list[str]) -> int:
     return sum
 
 
-def run_p2(lines: list[str]) -> int:
+def run_p2(lines: List[str]) -> int:
     sum = 0
     for line in lines:
         digits = extract_digits_p2(line)

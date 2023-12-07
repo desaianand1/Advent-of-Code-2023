@@ -3,6 +3,7 @@
 import argparse, os
 from enum import Enum
 import sys
+from typing import List
 
 
 class Color(str, Enum):
@@ -39,7 +40,7 @@ def parse_args() -> str:
     return file_lines
 
 
-def parse_games(lines):
+def parse_games(lines: List[str]) -> List[Game]:
     games = []
     for line in lines:
         sections = line.split(":")
@@ -62,7 +63,7 @@ def parse_games(lines):
     return games
 
 
-def run_p1(games):
+def run_p1(games: List[Game]) -> int:
     possible_cubes = {Color.Red: 12, Color.Green: 13, Color.Blue: 14}
     _sum = 0
     for game in games:
@@ -76,7 +77,7 @@ def run_p1(games):
     return _sum
 
 
-def run_p2(games):
+def run_p2(games: List[Game]) -> int:
     _sum = 0
     for game in games:
         least_cubes_required = {Color.Red: 0, Color.Green: 0, Color.Blue: 0}
