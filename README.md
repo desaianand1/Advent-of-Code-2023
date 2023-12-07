@@ -53,7 +53,7 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 
 ### Prerequisites <a name="prereq"></a>
 
-I solved most of this year's problems in Go, and a few in Python. To get started, you'll need to install both by following their respective installation instructions:
+I solved all of this year's problems in Go but also translated solutions to Python to benchmark them. To get started, you'll need to install both by following their respective installation instructions:
 
 - Python (> 3.8): [Download and Install](https://www.python.org/downloads/)
 
@@ -61,7 +61,7 @@ I solved most of this year's problems in Go, and a few in Python. To get started
 
 ### 🍪 Session Cookies <a name="cookie"></a>
 
-The `new_day.ps1` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input etc.
+The `new_day.ps1` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input.
 
 To get your own cookie, visit [Advent of Code](https://adventofcode.com/). Once logged in:
 
@@ -73,7 +73,7 @@ To get your own cookie, visit [Advent of Code](https://adventofcode.com/). Once 
 
 - Right-click and select "Inspect Element". In the "Application" tab, under "Storage", expand "Cookies" and select `https://adventofcode.com`. Copy the cookie titled "session"
 
-Paste your session cookie data into your `.env` file. (`.env.example` provides a structural example)
+Paste your session cookie data into a newly created `.env` file. (`.env.example` provides a structural example)
 
 ### 📆 Generating a New Day <a name="new-day"></a>
 
