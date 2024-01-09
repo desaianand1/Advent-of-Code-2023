@@ -61,7 +61,7 @@ I solved all of this year's problems in Go but also translated solutions to Pyth
 
 ### 🍪 Session Cookies <a name="cookie"></a>
 
-The `new_day.ps1` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input.
+The `new_day.ps1` script uses Advent of Code's authentication [session cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) to auto-fetch the day's input for the current year.
 
 To get your own cookie, visit [Advent of Code](https://adventofcode.com/). Once logged in:
 
@@ -79,14 +79,15 @@ Paste your session cookie data into a newly created `.env` file. (`.env.example`
 
 - Add your [Advent of Code session cookie](#cookie) to the `.env` file.
 
-- Run `new_day.ps1` to create the current day's directory
-- Run `new_day.ps1 <d>` where `<d>` is a day between 1 - 25 to create the that day's directory (if it doesn't already exist)
-
-> Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year)
-
+- Option 1: Run `new_day.ps1` to create the current day's directory
+- Option 2: Run `new_day.ps1 d` where `d` is a day between `1` - `25` to create that day's directory for the current year (if it doesn't already exist)
+- Option 3: Run `new_day.ps1 yyyy d` where `yyyy` is a 4-digit year between `2015` and the current year, `d` is a day between `1` - `25` to create that date's directory (if it doesn't already exist)
 - Navigate to the generated day's directory, equipped with the day's input and some boilerplate Go and Python files
 
-## Running Code <a name="run-code">></a>
+> Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year)
+> Additionally, it is not currently equipped to handle mixing of years (e.g. day 3 of 2023 alongside day 8 of 2022).
+
+## Running Code <a name="run-code"></a>
 
 To run the code for day `d`, execute the following, replacing `<d>` with the specific day (e.g. 1 - 25)
 
