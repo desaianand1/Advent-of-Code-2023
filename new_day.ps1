@@ -1,15 +1,19 @@
 param(
     [Parameter(Mandatory = $False)]
+    [ValidateRange(2015, 2023)]
+    [int]$SelectedYear = (Get-Date).Year,
+    [Parameter(Mandatory = $False)]
     [ValidateRange(1, 25)]
     [int]$SelectedDay = (Get-Date).ToString("%d")
 )
 function New-Day {
     param (
         [Parameter(Mandatory)]
+        $Year,
+        [Parameter(Mandatory)]
         $Day,
         [String]$InputFileName = "input.txt"
     )
-    $Year = (Get-Date).Year
     $Domain = "adventofcode.com"
     $InputURL = "https://www.$Domain/$Year/day/$Day/input"
     $DayOutputDir = "day$Day"
@@ -82,4 +86,4 @@ function Get-Cookie {
     }
 }
 # Entry point:
-New-Day -Day $SelectedDay
+New-Day -Year $SelectedYear -Day $SelectedDay
