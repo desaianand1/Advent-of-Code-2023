@@ -25,6 +25,8 @@ input.txt
 
 # Go workspace file
 go.work
+# VSCode workspace file
+*.code-workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
