@@ -50,7 +50,6 @@ const (
 )
 
 var cardRankMap = map[rune]int{
-	'1': 1,
 	'2': 2,
 	'3': 3,
 	'4': 4,
@@ -64,6 +63,13 @@ var cardRankMap = map[rune]int{
 	'Q': 12,
 	'K': 13,
 	'A': 14,
+}
+
+var cardRankMap2 = initP2CardRankMap(cardRankMap)
+
+func initP2CardRankMap(_cardRankMap map[rune]int) map[rune]int {
+	_cardRankMap['J'] = 1
+	return _cardRankMap
 }
 
 var cardHandTypeMap = map[HandType]int{
@@ -117,6 +123,31 @@ func (thisHandType HandType) compareTo(otherHandType HandType) int {
 		return -1
 	} else {
 		return 1
+	}
+}
+
+type byHandP2 []CardHand
+
+func (hands byHandP2) Len() int {
+	return len(hands)
+}
+func (hands byHandP2) Swap(i, j int) {
+	hands[i], hands[j] = hands[j], hands[i]
+}
+func (hands byHandP2) Less(i, j int) bool {
+	var thisHand, otherHand = hands[i], hands[j]
+	var comparedValue = thisHand._type.compareTo(otherHand._type)
+	if comparedValue != 0 {
+		return comparedValue < 0
+	} else {
+		thisHandRunes, otherHandRunes := []rune(thisHand.cards), []rune(otherHand.cards)
+		for i, cardRune := range thisHandRunes {
+			thisVal, otherVal := cardRankMap2[cardRune], cardRankMap2[otherHandRunes[i]]
+			if thisVal != otherVal {
+				return thisVal < otherVal
+			}
+		}
+		return false
 	}
 }
 
@@ -177,15 +208,25 @@ func determineHandType(cards string) HandType {
 	}
 }
 
-func parseHands(lines []string) []CardHand {
+func determineHandTypeP2(cards string) HandType {
+	return ""
+}
+
+func parseHands(lines []string, isPartTwo bool) []CardHand {
 	hands := make([]CardHand, len(lines))
 	for i, line := range lines {
 		parts := strings.Fields(line)
 		cards, bid := parts[0], parseInt(parts[1])
+		var handType HandType
+		if isPartTwo {
+			handType = determineHandTypeP2(cards)
+		} else {
+			handType = determineHandType(cards)
+		}
 		hands[i] = CardHand{
 			cards: cards,
 			bid:   bid,
-			_type: determineHandType(cards),
+			_type: handType,
 		}
 	}
 	return hands
@@ -204,14 +245,21 @@ func rankHands(hands []CardHand) []CardHand {
 	return hands
 }
 
+func rankHandsP2(hands []CardHand) []CardHand {
+	sort.Sort(byHandP2(hands))
+	return hands
+}
+
 func runP1(lines []string) int {
-	var hands = parseHands(lines)
+	var hands = parseHands(lines, false)
 	rankedHands := rankHands(hands)
 	return calculateTotalWinnings(rankedHands)
 }
 
 func runP2(lines []string) int {
-	return -1
+	var hands = parseHands(lines, true)
+	rankedHands := rankHandsP2(hands)
+	return calculateTotalWinnings(rankedHands)
 }
 
 func main() {
