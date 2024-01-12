@@ -84,7 +84,7 @@ Paste your session cookie data into a newly created `.env` file. (`.env.example`
 - Option 3: Run `new_day.ps1 yyyy d` where `yyyy` is a 4-digit year between `2015` and the current year, `d` is a day between `1` - `25` to create that date's directory (if it doesn't already exist)
 - Navigate to the generated day's directory, equipped with the day's input and some boilerplate Go and Python files
 
-> Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year)
+> Note: This script was only intended to be run during the duration of Advent of Code (i.e. Dec 1 through 25 of a given year).
 > Additionally, it is not currently equipped to handle mixing of years (e.g. day 3 of 2023 alongside day 8 of 2022).
 
 ## Running Code <a name="run-code"></a>
