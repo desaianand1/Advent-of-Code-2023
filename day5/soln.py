@@ -7,16 +7,9 @@ from typing import List, Tuple
 
 def parse_args() -> str:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "input",
-        help="input file (.txt) to be read",
-        type=str,
-        nargs="?",
-        default="input.txt",
-    )
+    parser.add_argument("input", help="input file (.txt) to be read", type=str, nargs="?", default="input.txt")
     args = parser.parse_args()
-    input_dir = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(input_dir, args.input)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), args.input)
     if os.path.isfile(path):
         return path
     else:

@@ -28,16 +28,11 @@ def parse_args() -> str:
         default="input.txt",
     )
     args = parser.parse_args()
-    input_dir = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(input_dir, args.input)
-    try:
-        with open(path, "r") as input_file:
-            file_lines = input_file.read().splitlines()
-    except FileNotFoundError as e:
-        print(e)
-        sys.exit(1)
-
-    return file_lines
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), args.input)
+    if os.path.isfile(path):
+        return path
+    else:
+        raise FileNotFoundError(f"Input file {path} not found!")
 
 
 def parse_games(lines: List[str]) -> List[Game]:
@@ -93,7 +88,8 @@ def run_p2(games: List[Game]) -> int:
 
 
 if __name__ == "__main__":
-    lines = parse_args()
-    games = parse_games(lines)
-    print(f"part 1: {run_p1(games)}")
-    print(f"part 2: {run_p2(games)}")
+    input_file = parse_args()
+    with open(input_file) as file:
+        games = parse_games(file.readlines())
+        print(f"part 1: {run_p1(games)}")
+        print(f"part 2: {run_p2(games)}")

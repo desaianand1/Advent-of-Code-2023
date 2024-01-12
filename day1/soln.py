@@ -50,8 +50,7 @@ def parse_args() -> str:
         default="input.txt",
     )
     args = parser.parse_args()
-    input_dir = os.path.dirname(os.path.realpath(__file__))
-    path = os.path.join(input_dir, args.input)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), args.input)
     if os.path.isfile(path):
         return path
     else:

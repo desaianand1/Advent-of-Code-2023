@@ -298,16 +298,13 @@ func rankHands(hands []CardHand) []CardHand {
 
 func runP1(lines []string) int {
 	cardRankMap['J'] = 11
-	var hands = parseHands(lines, false)
-	rankedHands := rankHands(hands)
-	return calculateTotalWinnings(rankedHands)
+	return calculateTotalWinnings(rankHands(parseHands(lines, false)))
+
 }
 
 func runP2(lines []string) int {
 	cardRankMap['J'] = 1
-	var hands = parseHands(lines, true)
-	rankedHands := rankHands(hands)
-	return calculateTotalWinnings(rankedHands)
+	return calculateTotalWinnings(rankHands(parseHands(lines, true)))
 }
 
 func main() {
