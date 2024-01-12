@@ -4,7 +4,7 @@
 
 My attempt at Advent of Code 2023, learning Go lang while at it
 
-> Note: On some day 1 I had to fallback to Python to bypass Go's RE2 Regex implementation choice which prevents lookahead/lookbehind assertions
+> Note: On day 1, I had to fallback to Python to bypass Go's RE2 Regex implementation choice which prevents lookahead/lookbehind assertions
 
 **Disclaimer:** `input.txt`(s) have been omitted after the fact once I was made aware [they are not to be publicly shared](https://adventofcode.com/about#faq_copying).
 
