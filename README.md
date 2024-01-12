@@ -29,8 +29,8 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 | 04  | Scratchcards                    | ⭐⭐  |
 | 05  | If You Give A Seed A Fertilizer | ⭐⭐  |
 | 06  | Wait For It                     | ⭐⭐  |
-| 07  | Camel Cards                     | ⭐   |
-| 08  |                                 |       |
+| 07  | Camel Cards                     | ⭐⭐  |
+| 08  | Haunted Wasteland               |       |
 | 09  |                                 |       |
 | 10  |                                 |       |
 | 11  |                                 |       |
