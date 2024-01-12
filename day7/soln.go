@@ -65,13 +65,6 @@ var cardRankMap = map[rune]int{
 	'A': 14,
 }
 
-var cardRankMap2 = initP2CardRankMap(cardRankMap)
-
-func initP2CardRankMap(_cardRankMap map[rune]int) map[rune]int {
-	_cardRankMap['J'] = 1
-	return _cardRankMap
-}
-
 var cardHandTypeMap = map[HandType]int{
 	FIVE_OF_A_KIND:  7,
 	FOUR_OF_A_KIND:  6,
@@ -126,31 +119,6 @@ func (thisHandType HandType) compareTo(otherHandType HandType) int {
 	}
 }
 
-type byHandP2 []CardHand
-
-func (hands byHandP2) Len() int {
-	return len(hands)
-}
-func (hands byHandP2) Swap(i, j int) {
-	hands[i], hands[j] = hands[j], hands[i]
-}
-func (hands byHandP2) Less(i, j int) bool {
-	var thisHand, otherHand = hands[i], hands[j]
-	var comparedValue = thisHand._type.compareTo(otherHand._type)
-	if comparedValue != 0 {
-		return comparedValue < 0
-	} else {
-		thisHandRunes, otherHandRunes := []rune(thisHand.cards), []rune(otherHand.cards)
-		for i, cardRune := range thisHandRunes {
-			thisVal, otherVal := cardRankMap2[cardRune], cardRankMap2[otherHandRunes[i]]
-			if thisVal != otherVal {
-				return thisVal < otherVal
-			}
-		}
-		return false
-	}
-}
-
 func parseInt(str string) int {
 	integer, err := strconv.Atoi(str)
 	if err != nil {
@@ -160,7 +128,7 @@ func parseInt(str string) int {
 	return integer
 }
 
-func determineHandType(cards string) HandType {
+func createCardCountMap(cards string) map[rune]int {
 	cardMap := make(map[rune]int)
 	for _, card := range cards {
 		_, cardExists := cardMap[card]
@@ -170,6 +138,11 @@ func determineHandType(cards string) HandType {
 			cardMap[card] = 1
 		}
 	}
+	return cardMap
+}
+
+func determineHandType(cards string) HandType {
+	cardMap := createCardCountMap(cards)
 	maxCount := math.MinInt32
 	var highCountCard rune
 	for card, count := range cardMap {
@@ -209,7 +182,85 @@ func determineHandType(cards string) HandType {
 }
 
 func determineHandTypeP2(cards string) HandType {
-	return ""
+	cardMap := createCardCountMap(cards)
+	maxCount, jCount := math.MinInt32, 0
+	var highCountCard rune
+	for card, count := range cardMap {
+		if card == 'J' {
+			jCount = count
+		} else if count > maxCount {
+			maxCount = count
+			highCountCard = card
+		}
+	}
+
+	const FIVE_COUNT, FOUR_COUNT, THREE_COUNT, TWO_COUNT, HIGH int = 5, 4, 3, 2, 1
+
+	if maxCount == math.MinInt32 && jCount == FIVE_COUNT {
+		return FIVE_OF_A_KIND
+	}
+
+	switch maxCount {
+	case FIVE_COUNT:
+		return FIVE_OF_A_KIND
+	case FOUR_COUNT:
+		switch jCount {
+		case HIGH:
+			return FIVE_OF_A_KIND
+		}
+		return FOUR_OF_A_KIND
+	case THREE_COUNT:
+
+		switch jCount {
+		case TWO_COUNT:
+			return FIVE_OF_A_KIND
+		case HIGH:
+			return FOUR_OF_A_KIND
+		}
+		// check if full house or three of a kind
+		for _, count := range cardMap {
+			if count == TWO_COUNT {
+				return FULL_HOUSE
+			}
+		}
+		return THREE_OF_A_KIND
+	case TWO_COUNT:
+
+		switch jCount {
+		case THREE_COUNT:
+			return FIVE_OF_A_KIND
+		case TWO_COUNT:
+			return FOUR_OF_A_KIND
+		case HIGH:
+			for card, count := range cardMap {
+				if card != highCountCard && count == TWO_COUNT {
+					return FULL_HOUSE
+				}
+			}
+			return THREE_OF_A_KIND
+		}
+		// check if two pair or just one pair
+		for card, count := range cardMap {
+			if card != highCountCard && count == TWO_COUNT {
+				return TWO_PAIR
+			}
+		}
+		return ONE_PAIR
+	case HIGH:
+		switch jCount {
+		case FOUR_COUNT:
+			return FIVE_OF_A_KIND
+		case THREE_COUNT:
+			return FOUR_OF_A_KIND
+		case TWO_COUNT:
+			return THREE_OF_A_KIND
+		case HIGH:
+			return ONE_PAIR
+		}
+		return HIGH_CARD
+	default:
+		return HIGH_CARD
+	}
 }
 
 func parseHands(lines []string, isPartTwo bool) []CardHand {
@@ -245,20 +296,17 @@ func rankHands(hands []CardHand) []CardHand {
 	return hands
 }
 
-func rankHandsP2(hands []CardHand) []CardHand {
-	sort.Sort(byHandP2(hands))
-	return hands
-}
-
 func runP1(lines []string) int {
+	cardRankMap['J'] = 11
 	var hands = parseHands(lines, false)
 	rankedHands := rankHands(hands)
 	return calculateTotalWinnings(rankedHands)
 }
 
 func runP2(lines []string) int {
+	cardRankMap['J'] = 1
 	var hands = parseHands(lines, true)
-	rankedHands := rankHandsP2(hands)
+	rankedHands := rankHands(hands)
 	return calculateTotalWinnings(rankedHands)
 }
 
