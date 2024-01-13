@@ -48,8 +48,6 @@ type NodePair struct {
 type Network map[Node]NodePair
 
 func (pair NodePair) next(instruction Instruction) Node {
-	fmt.Printf("get %c of pair: %v\n", instruction, pair)
-
 	if instruction == LEFT {
 		return pair.first
 	}
@@ -68,7 +66,7 @@ func parseNetwork(lines []string) Network {
 	var network = make(map[Node]NodePair)
 	for _, line := range lines {
 		parts := strings.Split(line, "=")
-		node := Node(parts[0])
+		node := Node(strings.TrimSpace(parts[0]))
 		values := strings.TrimFunc(parts[1], func(r rune) bool { return r == '(' || r == ')' || r == ' ' })
 		nodeValues := strings.Split(values, ",")
 		network[node] = NodePair{Node(strings.TrimSpace(nodeValues[0])), Node(strings.TrimSpace(nodeValues[1]))}
@@ -86,7 +84,6 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 	for current != end {
 		if instrIdx == numInstructions {
 			instrIdx = 0
-			break
 		}
 		var instruction = instructions[instrIdx]
 		pair, doesPairExist := network[current]
@@ -95,7 +92,7 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 			os.Exit(1)
 		}
 		next := pair.next(instruction)
-		fmt.Printf("%d. %s --%c-> %s\n", steps, current, instruction, next)
+		fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction,pair, next)
 		current = next
 		instrIdx += 1
 		steps += 1
