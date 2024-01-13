@@ -92,7 +92,7 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 			os.Exit(1)
 		}
 		next := pair.next(instruction)
-		fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction,pair, next)
+		fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
 		current = next
 		instrIdx += 1
 		steps += 1
@@ -102,7 +102,7 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 
 func runP1(lines []string) int {
 	instructions := parseInstructions(lines[0])
-	// 2 onwards to skip over blank line between instructions and network
+	// index 2 onwards to skip over blank line between instructions and network
 	network := parseNetwork(lines[2:])
 	return calculateStepsRequired(network, instructions)
 }
