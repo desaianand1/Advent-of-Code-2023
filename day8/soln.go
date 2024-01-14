@@ -40,7 +40,9 @@ type Instructions []Instruction
 const LEFT, RIGHT Instruction = Instruction('L'), Instruction('R')
 
 type Node string
-
+func (node Node) lastChar() rune{
+	return rune(node[len(node)-1])
+}
 type NodePair struct {
 	first  Node
 	second Node
@@ -108,7 +110,10 @@ func runP1(lines []string) int {
 }
 
 func runP2(lines []string) int {
-	return -1
+	instructions := parseInstructions(lines[0])
+	// index 2 onwards to skip over blank line between instructions and network
+	network := parseNetwork(lines[2:])
+	return calculateStepsRequired(network, instructions)
 }
 
 func main() {
