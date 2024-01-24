@@ -1,22 +1,25 @@
 #!/bin/bash
 
 # Parse command-line arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --selected_year)
-            selected_year=$2
-            shift
-            ;;
-        --selected_day)
-            selected_day=$2
-            shift
-            ;;
-        *)
-            # Unknown option
-            ;;
-    esac
-    shift
-done
+# Check if two arguments are provided
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <yyyy> <d>"
+    exit 1
+fi
+
+# Parse and validate the arguments
+selected_year=$1
+if ! [[ $selected_year =~ ^[0-9]{4}$ ]]; then
+    echo "Error: Invalid year format. Please provide a 4-digit year (yyyy)."
+    exit 1
+fi
+
+# Parse and validate the second argument (day)
+selected_day=$2
+if ! [[ $selected_day =~ ^[1-9]$|^1[0-9]$|^2[0-5]$ ]]; then
+    echo "Error: Invalid day format. Please provide a valid day (1-25)."
+    exit 1
+fi
 
 # Set default values if not provided
 selected_year=${selected_year:-$(date +'%Y')}
@@ -27,7 +30,7 @@ function new_day {
     local day=$2
     local input_file_name="input.txt"
     local domain="adventofcode.com"
-    local input_url="https://www.$domain/$year/day/$day/input"
+    local input_url="https://$domain/$year/day/$day/input"
     local day_output_dir="day$day"
 
     if [ -d $day_output_dir ]; then
@@ -61,32 +64,24 @@ function new_day {
 }
 
 function new_day_input_file {
-    local input_url=$2
-    local cookie_val=$3
-    local output_dir=$4
+    local input_url=$1
+    local cookie_val=$2
+    local output_dir=$3
 
     if ! curl "$input_url" --compressed -H "Cookie: session=${cookie_val}" -o "$output_dir"; then
-    echo "Failed to fetch Advent of Code input! Could not create $output_dir"
-    rm -r "$output_dir"  # Clean up by removing the created directory
-    exit 1
+        echo "Failed to fetch Advent of Code input! Could not create $output_dir"
+        rm -r "$output_dir" # Clean up by removing the created directory
+        exit 1
     else
         echo "Successfully downloaded Advent of Code input to $output_dir"
     fi
 }
 
 function get_cookie {
-    dot_env=".env"
-    if [ ! -e $dot_env ]; then
-        echo "No $dot_env file found! Please create one and retry!"
-        exit 1
-    fi
 
-    while IFS='=' read -r name value; do
-        if [ -n "$name" ] && [ "${name:0:1}" != "#" ]; then
-            # Ignore blank and comment lines
-            echo "$value"
-        fi
-    done < "$dot_env"
+    dot_env=".env"
+    echo $(grep 'SESSION_COOKIE=' $dot_env | cut -d= -f2)
+
 }
 
 # Entry point
