@@ -115,7 +115,6 @@ func runP2(lines []string) int {
 	instructions := parseInstructions(lines[0])
 	// index 2 onwards to skip over blank line between instructions and network
 	network := parseNetwork(lines[2:])
-	// new steps
 	return calculateStepsRequired(network, instructions)
 }
 
