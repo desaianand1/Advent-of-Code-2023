@@ -104,6 +104,54 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 	return steps
 }
 
+func calculateStepsRequiredP2(network Network, instructions Instructions) int {
+	numInstructions := len(instructions)
+	//fmt.Printf("instructions: %c\n", instructions)
+	//fmt.Printf("network: %v\n", network)
+	currentNodes := findAllStarterNodes(network)
+	//fmt.Printf("starter nodes: %v\n", currentNodes)
+
+	instrIdx, steps := 0, 0
+	for !areAllNodesEndNodes(currentNodes) {
+		if instrIdx == numInstructions {
+			instrIdx = 0
+		}
+		var instruction = instructions[instrIdx]
+		for i, current := range currentNodes {
+			pair, doesPairExist := network[current]
+			if !doesPairExist {
+				fmt.Printf("Could not find %s in network %v! Aborting\n", current, network)
+				os.Exit(1)
+			}
+			next := pair.next(instruction)
+			//fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
+			currentNodes[i] = next
+		}
+		instrIdx += 1
+		steps += 1
+	}
+	return steps
+}
+
+func findAllStarterNodes(network Network) []Node {
+	var starterNodes []Node
+	for node := range network {
+		if node.lastChar() == 'A' {
+			starterNodes = append(starterNodes, node)
+		}
+	}
+	return starterNodes
+}
+
+func areAllNodesEndNodes(nodes []Node) bool {
+	for _, node := range nodes {
+		if node.lastChar() != 'Z' {
+			return false
+		}
+	}
+	return true
+}
+
 func runP1(lines []string) int {
 	instructions := parseInstructions(lines[0])
 	// index 2 onwards to skip over blank line between instructions and network
@@ -115,11 +163,11 @@ func runP2(lines []string) int {
 	instructions := parseInstructions(lines[0])
 	// index 2 onwards to skip over blank line between instructions and network
 	network := parseNetwork(lines[2:])
-	return calculateStepsRequired(network, instructions)
+	return calculateStepsRequiredP2(network, instructions)
 }
 
 func main() {
 	lines := parseArgs()
-	fmt.Printf("part 1: %d\n", runP1(lines))
+	//fmt.Printf("part 1: %d\n", runP1(lines))
 	fmt.Printf("part 2: %d\n", runP2(lines))
 }
