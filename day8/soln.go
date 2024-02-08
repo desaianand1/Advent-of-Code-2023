@@ -110,7 +110,8 @@ func calculateStepsRequiredP2(network Network, instructions Instructions) int {
 	//fmt.Printf("network: %v\n", network)
 	currentNodes := findAllStarterNodes(network)
 	//fmt.Printf("starter nodes: %v\n", currentNodes)
-
+	visitedNodes := make(map[Node]bool)
+	starterNodeStepMap := make(map[Node]int)
 	instrIdx, steps := 0, 0
 	for !areAllNodesEndNodes(currentNodes) {
 		if instrIdx == numInstructions {
@@ -118,6 +119,11 @@ func calculateStepsRequiredP2(network Network, instructions Instructions) int {
 		}
 		var instruction = instructions[instrIdx]
 		for i, current := range currentNodes {
+			_, wasNodeVisited := visitedNodes[current]
+			if wasNodeVisited{
+				starterNodeStepMap[current] = steps
+				continue
+			}
 			pair, doesPairExist := network[current]
 			if !doesPairExist {
 				fmt.Printf("Could not find %s in network %v! Aborting\n", current, network)
@@ -125,6 +131,7 @@ func calculateStepsRequiredP2(network Network, instructions Instructions) int {
 			}
 			next := pair.next(instruction)
 			//fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
+			visitedNodes[current] = true
 			currentNodes[i] = next
 		}
 		instrIdx += 1
