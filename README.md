@@ -32,7 +32,7 @@ My attempt at Advent of Code 2023, learning Go lang while at it
 | 07  | Camel Cards                     | ⭐⭐  |
 | 08  | Haunted Wasteland               | ⭐⭐  |
 | 09  | Mirage Maintenance              | ⭐⭐  |
-| 10  |                                 |       |
+| 10  | Pipe Maze                       |       |
 | 11  |                                 |       |
 | 12  |                                 |       |
 | 13  |                                 |       |
