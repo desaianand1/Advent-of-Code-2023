@@ -81,8 +81,8 @@ func parseNetwork(lines []string) Network {
 
 func calculateStepsRequired(network Network, instructions Instructions) int {
 	numInstructions := len(instructions)
-	fmt.Printf("instructions: %c\n", instructions)
-	fmt.Printf("network: %v\n", network)
+	//fmt.Printf("instructions: %c\n", instructions)
+	//fmt.Printf("network: %v\n", network)
 
 	current, end, instrIdx, steps := Node("AAA"), Node("ZZZ"), 0, 0
 	for current != end {
@@ -96,7 +96,7 @@ func calculateStepsRequired(network Network, instructions Instructions) int {
 			os.Exit(1)
 		}
 		next := pair.next(instruction)
-		fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
+		//fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
 		current = next
 		instrIdx += 1
 		steps += 1
@@ -110,34 +110,47 @@ func calculateStepsRequiredP2(network Network, instructions Instructions) int {
 	//fmt.Printf("network: %v\n", network)
 	currentNodes := findAllStarterNodes(network)
 	//fmt.Printf("starter nodes: %v\n", currentNodes)
-	visitedNodes := make(map[Node]bool)
-	starterNodeStepMap := make(map[Node]int)
-	instrIdx, steps := 0, 0
-	for !areAllNodesEndNodes(currentNodes) {
-		if instrIdx == numInstructions {
-			instrIdx = 0
-		}
-		var instruction = instructions[instrIdx]
-		for i, current := range currentNodes {
-			_, wasNodeVisited := visitedNodes[current]
-			if wasNodeVisited{
-				starterNodeStepMap[current] = steps
-				continue
+
+	nodeSteps := make([]int, len(currentNodes))
+	for i, current := range currentNodes {
+
+		instrIdx, steps := 0, 0
+		for !isEndNode(current) {
+			if instrIdx == numInstructions {
+				instrIdx = 0
 			}
+			var instruction = instructions[instrIdx]
 			pair, doesPairExist := network[current]
 			if !doesPairExist {
 				fmt.Printf("Could not find %s in network %v! Aborting\n", current, network)
 				os.Exit(1)
 			}
 			next := pair.next(instruction)
-			//fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
-			visitedNodes[current] = true
-			currentNodes[i] = next
+		//	fmt.Printf("%d. %s --%c-> %v = %s\n", steps, current, instruction, pair, next)
+			current = next
+			steps += 1
+			instrIdx += 1
 		}
-		instrIdx += 1
-		steps += 1
+		nodeSteps[i] = steps
 	}
-	return steps
+	return calculateNodeLCMs(nodeSteps)
+}
+
+func calculateNodeLCMs(nodeSteps []int) int {
+	lcm := 1
+	for _, stepValue := range nodeSteps {
+		lcm = lcm * stepValue / gcd(lcm, stepValue)
+	}
+	return lcm
+}
+
+func gcd(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
 }
 
 func findAllStarterNodes(network Network) []Node {
@@ -150,13 +163,8 @@ func findAllStarterNodes(network Network) []Node {
 	return starterNodes
 }
 
-func areAllNodesEndNodes(nodes []Node) bool {
-	for _, node := range nodes {
-		if node.lastChar() != 'Z' {
-			return false
-		}
-	}
-	return true
+func isEndNode(node Node) bool {
+	return node.lastChar() == 'Z'
 }
 
 func runP1(lines []string) int {
@@ -175,6 +183,6 @@ func runP2(lines []string) int {
 
 func main() {
 	lines := parseArgs()
-	//fmt.Printf("part 1: %d\n", runP1(lines))
+	fmt.Printf("part 1: %d\n", runP1(lines))
 	fmt.Printf("part 2: %d\n", runP2(lines))
 }
