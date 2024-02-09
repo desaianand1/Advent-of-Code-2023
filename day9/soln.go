@@ -75,7 +75,6 @@ func predictExtrapolations(sequences [][]int, isPartOne bool) []int {
 }
 
 func sumSequenceDifferences(sequence []int, extrapolation int) int {
-	//fmt.Printf("seq: %v | sum: %d\n",sequence,extrapolation)
 	sequenceSum := sum(sequence)
 	if sequenceSum == 0 {
 		return extrapolation
