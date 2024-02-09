@@ -58,15 +58,24 @@ func parseSequences(lines []string) [][]int {
 }
 
 func predictExtrapolations(sequences [][]int, isPartOne bool) []int {
-	extrapolations := make([]int, len(sequences[0]))
+	extrapolations := []int{}
 	for _, sequence := range sequences {
-		extrapolations = append(extrapolations, sumSequenceDifferences(sequence, getSequenceEndValue(sequence, isPartOne), isPartOne))
+		initial := 0
+		if isPartOne {
+			initial = sequence[len(sequence)-1]
+		} else {
+			initial = sequence[0]
+			for i, j := 0, len(sequence)-1; i < j; i, j = i+1, j-1 {
+				sequence[i], sequence[j] = sequence[j], sequence[i]
+			}
+		}
+		extrapolations = append(extrapolations, sumSequenceDifferences(sequence, initial))
 	}
 	return extrapolations
 }
 
-func sumSequenceDifferences(sequence []int, extrapolation int, isPartOne bool) int {
-	fmt.Printf("seq: %v | sum: %d\n",sequence,extrapolation)
+func sumSequenceDifferences(sequence []int, extrapolation int) int {
+	//fmt.Printf("seq: %v | sum: %d\n",sequence,extrapolation)
 	sequenceSum := sum(sequence)
 	if sequenceSum == 0 {
 		return extrapolation
@@ -76,15 +85,8 @@ func sumSequenceDifferences(sequence []int, extrapolation int, isPartOne bool) i
 		diff := sequence[i+1] - sequence[i]
 		sequenceDiff = append(sequenceDiff, diff)
 	}
-	return sumSequenceDifferences(sequenceDiff, extrapolation+getSequenceEndValue(sequenceDiff, isPartOne), isPartOne)
-}
 
-func getSequenceEndValue(sequence []int, shouldGetLastVal bool) int {
-	if shouldGetLastVal {
-		return sequence[len(sequence)-1]
-	} else {
-		return sequence[0]
-	}
+	return sumSequenceDifferences(sequenceDiff, extrapolation+sequenceDiff[len(sequenceDiff)-1])
 }
 
 func sum(array []int) int {
