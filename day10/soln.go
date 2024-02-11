@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"path"
 	"runtime"
@@ -57,16 +58,145 @@ var pipeDirectionMap = map[rune]Pipe{
 	'S': Starter,
 }
 
-func findPipeLoop(lines []string) {
+type PipePoint struct {
+	pipe Pipe
+	i    int
+	j    int
+}
 
-	for i, line := range lines {
-		for j, token := range line {
-			direction, doesDirectionExist := pipeDirectionMap[token]
-			if doesDirectionExist && direction == Starter {
+type PipeLoop = []PipePoint
+
+func findPipeLoop(grid []string) PipeLoop {
+	var pipeLoop = PipeLoop{}
+	for i, row := range grid {
+		for j, token := range row {
+			direction, isDirection := pipeDirectionMap[token]
+			if isDirection && direction == Starter {
 				fmt.Printf("S position: %d, %d\n", i, j)
+				pipeLoop = append(pipeLoop, PipePoint{i: i, j: j, pipe: Starter})
 			}
 		}
 	}
+	return pipeLoop
+}
+
+func crawlPipeLoop(grid []string, point PipePoint) {
+	corners := checkFourCorners(grid, point)
+	if len(corners) == 0 {
+		return
+	}
+	for _, corner := range corners {
+		if corner.pipe == Starter {
+			break
+		}
+	}
+
+}
+
+func arePipesConnected(this PipePoint, other PipePoint) bool {
+	// overlapping pipes not allowed
+	if this.i == other.i && this.j == other.j {
+		return false
+	}
+	// pipes are not-adjacent either vertically or horizontally
+	if math.Abs(float64(this.i-other.i))-1 > 1e-9 || math.Abs(float64(this.j-other.j))-1 > 1e-9 {
+		return false
+	}
+	// pipes are diagonally adjacent, i.e. not adjacent
+	if (this.i == other.i || this.j != other.j) && (this.i != other.i || this.j == other.j) {
+		return false
+	}
+	switch this.pipe {
+	case Vertical:
+		if this.i > other.i {
+			return other.pipe == TopLeft || other.pipe == TopRight || other.pipe == Vertical
+		} else {
+			return other.pipe == BottomLeft || other.pipe == BottomRight || other.pipe == Vertical
+		}
+	case Horizontal:
+		if this.j > other.j {
+			return other.pipe == BottomLeft || other.pipe == TopLeft || other.pipe == Horizontal
+		} else {
+			return other.pipe == BottomRight || other.pipe == TopRight || other.pipe == Horizontal
+		}
+	case TopLeft:
+		if this.i > other.i || this.j > other.j {
+			return false
+		}
+		if this.j == other.j {
+			return other.pipe == Vertical || other.pipe == BottomLeft || other.pipe == BottomRight
+		}
+		return other.pipe == Horizontal || other.pipe == BottomRight || other.pipe == TopRight
+
+	case TopRight:
+		if this.i > other.i || this.j < other.j {
+			return false
+		}
+		if this.j == other.j {
+			return other.pipe == Vertical || other.pipe == BottomLeft || other.pipe == BottomRight
+		}
+		return other.pipe == Horizontal || other.pipe == BottomLeft || other.pipe == TopLeft
+	case BottomLeft:
+		if this.i < other.i || this.j > other.j {
+			return false
+		}
+		if this.j == other.j {
+			return other.pipe == Vertical || other.pipe == TopLeft || other.pipe == TopRight
+		}
+		return other.pipe == Horizontal || other.pipe == BottomRight || other.pipe == TopRight
+	case BottomRight:
+		if this.i < other.i || this.j < other.j {
+			return false
+		}
+		if this.j == other.j {
+			return other.pipe == Vertical || other.pipe == TopLeft || other.pipe == TopRight
+		}
+		return other.pipe == Horizontal || other.pipe == BottomLeft || other.pipe == TopLeft
+	default:
+		return false
+	}
+}
+
+func checkFourCorners(grid []string, point PipePoint) []PipePoint {
+	above, below, left, right := point.i-1, point.i+1, point.j-1, point.j+1
+	foundPoints := []PipePoint{}
+	if above >= 0 {
+		token := rune(grid[above][point.j])
+		pipe, isPipeDirection := pipeDirectionMap[token]
+		adjacentPoint := PipePoint{i: above, j: point.j, pipe: pipe}
+		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
+			foundPoints = append(foundPoints, adjacentPoint)
+		}
+	}
+
+	if below < len(grid) {
+		token := rune(grid[below][point.j])
+		pipe, isPipeDirection := pipeDirectionMap[token]
+		adjacentPoint := PipePoint{i: below, j: point.j, pipe: pipe}
+		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
+			foundPoints = append(foundPoints, adjacentPoint)
+		}
+	}
+
+	if left >= 0 {
+		token := rune(grid[point.i][left])
+		pipe, isPipeDirection := pipeDirectionMap[token]
+		adjacentPoint := PipePoint{i: point.i, j: left, pipe: pipe}
+		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
+			foundPoints = append(foundPoints, adjacentPoint)
+		}
+	}
+
+	if right < len(grid[point.i]) {
+		token := rune(grid[point.i][right])
+		pipe, isPipeDirection := pipeDirectionMap[token]
+		adjacentPoint := PipePoint{i: point.i, j: right, pipe: pipe}
+		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
+			foundPoints = append(foundPoints, adjacentPoint)
+		}
+	}
+
+	return foundPoints
 }
 
 func runP1(lines []string) int {
