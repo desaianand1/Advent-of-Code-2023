@@ -54,7 +54,6 @@ var pipeDirectionMap = map[rune]Pipe{
 	'J': BottomRight,
 	'7': TopRight,
 	'F': TopLeft,
-	'.': Ground,
 	'S': Starter,
 }
 
@@ -68,29 +67,41 @@ type PipeLoop = []PipePoint
 
 func findPipeLoop(grid []string) PipeLoop {
 	var pipeLoop = PipeLoop{}
+	var starterPipe PipePoint
 	for i, row := range grid {
 		for j, token := range row {
 			direction, isDirection := pipeDirectionMap[token]
 			if isDirection && direction == Starter {
-				fmt.Printf("S position: %d, %d\n", i, j)
-				pipeLoop = append(pipeLoop, PipePoint{i: i, j: j, pipe: Starter})
+				starterPipe = PipePoint{i: i, j: j, pipe: Starter}
+				break
 			}
 		}
 	}
+	visitedPipes := make(map[PipePoint]bool)
+	crawlPipeLoop(grid, starterPipe, &pipeLoop, &visitedPipes)
 	return pipeLoop
 }
 
-func crawlPipeLoop(grid []string, point PipePoint) {
+func crawlPipeLoop(grid []string, point PipePoint, pipeLoop *PipeLoop, visitedPipes *map[PipePoint]bool) {
+	fmt.Printf("crawling at (%d,%d): %v |\n", point.i, point.j, point.pipe)
+	_, hasVisited := (*visitedPipes)[point]
+	fmt.Printf("visited? (%d,%d): %v = %v\n", point.i, point.j, point.pipe, hasVisited)
+	if hasVisited {
+		return
+	}
+	(*visitedPipes)[point]= true
+	*pipeLoop = append(*pipeLoop, point)
 	corners := checkFourCorners(grid, point)
+	fmt.Printf("corners found %v\n", corners)
 	if len(corners) == 0 {
 		return
 	}
 	for _, corner := range corners {
 		if corner.pipe == Starter {
-			break
+			return
 		}
+		crawlPipeLoop(grid, corner, pipeLoop, visitedPipes)
 	}
-
 }
 
 func arePipesConnected(this PipePoint, other PipePoint) bool {
@@ -152,6 +163,8 @@ func arePipesConnected(this PipePoint, other PipePoint) bool {
 			return other.pipe == Vertical || other.pipe == TopLeft || other.pipe == TopRight
 		}
 		return other.pipe == Horizontal || other.pipe == BottomLeft || other.pipe == TopLeft
+	case Starter:
+		return true
 	default:
 		return false
 	}
@@ -200,7 +213,10 @@ func checkFourCorners(grid []string, point PipePoint) []PipePoint {
 }
 
 func runP1(lines []string) int {
-	findPipeLoop(lines)
+	pipeLoop := findPipeLoop(lines)
+	for _, point := range pipeLoop {
+		fmt.Printf("%v\n", point.pipe)
+	}
 	return -1
 }
 
