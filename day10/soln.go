@@ -176,7 +176,6 @@ func arePipesConnected(this PipePoint, other PipePoint) bool {
 				return other.pipe == Horizontal || other.pipe == BottomRight || other.pipe == TopRight
 			}
 		}
-		return false
 	default:
 		return false
 	}
