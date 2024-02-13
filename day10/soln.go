@@ -89,7 +89,7 @@ func crawlPipeLoop(grid []string, point PipePoint, pipeLoop *PipeLoop, visitedPi
 	if hasVisited {
 		return
 	}
-	(*visitedPipes)[point]= true
+	(*visitedPipes)[point] = true
 	*pipeLoop = append(*pipeLoop, point)
 	corners := checkFourCorners(grid, point)
 	fmt.Printf("corners found %v\n", corners)
@@ -164,7 +164,19 @@ func arePipesConnected(this PipePoint, other PipePoint) bool {
 		}
 		return other.pipe == Horizontal || other.pipe == BottomLeft || other.pipe == TopLeft
 	case Starter:
-		return true
+		if this.i > other.i {
+			return other.pipe == Vertical || other.pipe == TopLeft || other.pipe == TopRight
+		} else if this.i < other.i {
+			return other.pipe == Vertical || other.pipe == BottomLeft || other.pipe == BottomRight
+		} else {
+			// i's are equal, j's different
+			if this.j > other.j {
+				return other.pipe == Horizontal || other.pipe == BottomLeft || other.pipe == TopLeft
+			} else {
+				return other.pipe == Horizontal || other.pipe == BottomRight || other.pipe == TopRight
+			}
+		}
+		return false
 	default:
 		return false
 	}
@@ -178,6 +190,7 @@ func checkFourCorners(grid []string, point PipePoint) []PipePoint {
 		pipe, isPipeDirection := pipeDirectionMap[token]
 		adjacentPoint := PipePoint{i: above, j: point.j, pipe: pipe}
 		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
+			fmt.Printf("are %v and %v connected? %v\n", point, adjacentPoint, arePipesConnected(point, adjacentPoint))
 			foundPoints = append(foundPoints, adjacentPoint)
 		}
 	}
