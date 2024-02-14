@@ -65,6 +65,24 @@ type PipePoint struct {
 
 type PipeLoop = []PipePoint
 
+func (pipeLoop PipeLoop) toString() string {
+	maxI, maxJ := math.MinInt32, math.MinInt32
+	for _, point := range pipeLoop {
+		if point.i > maxI {
+			maxI = point.i
+		}
+		if point.j > maxJ {
+			maxJ = point.j
+		}
+	}
+
+	grid := make([][]rune, maxI)
+	for i := range grid {
+		grid[i] = make([]rune, maxJ)
+	}
+	return ""
+}
+
 func findPipeLoop(grid []string) PipeLoop {
 	var pipeLoop = PipeLoop{}
 	var starterPipe PipePoint
@@ -82,26 +100,34 @@ func findPipeLoop(grid []string) PipeLoop {
 	return pipeLoop
 }
 
-func crawlPipeLoop(grid []string, point PipePoint, pipeLoop *PipeLoop, visitedPipes *map[PipePoint]bool) {
+func crawlPipeLoop(grid []string, point PipePoint, pipeLoop *PipeLoop, visitedPipes *map[PipePoint]bool) bool {
 	fmt.Printf("crawling at (%d,%d): %v |\n", point.i, point.j, point.pipe)
 	_, hasVisited := (*visitedPipes)[point]
 	fmt.Printf("visited? (%d,%d): %v = %v\n", point.i, point.j, point.pipe, hasVisited)
 	if hasVisited {
-		return
+		return false
 	}
 	(*visitedPipes)[point] = true
 	*pipeLoop = append(*pipeLoop, point)
 	corners := checkFourCorners(grid, point)
 	fmt.Printf("corners found %v\n", corners)
 	if len(corners) == 0 {
-		return
+		return false
 	}
 	for _, corner := range corners {
 		if corner.pipe == Starter {
-			return
+			return true
 		}
-		crawlPipeLoop(grid, corner, pipeLoop, visitedPipes)
+		_, hasVisited := (*visitedPipes)[corner]
+		if !hasVisited {
+			if crawlPipeLoop(grid, corner, pipeLoop, visitedPipes) {
+				return true
+			}
+		} else {
+			return false
+		}
 	}
+	return false
 }
 
 func arePipesConnected(this PipePoint, other PipePoint) bool {
@@ -188,8 +214,8 @@ func checkFourCorners(grid []string, point PipePoint) []PipePoint {
 		token := rune(grid[above][point.j])
 		pipe, isPipeDirection := pipeDirectionMap[token]
 		adjacentPoint := PipePoint{i: above, j: point.j, pipe: pipe}
+		fmt.Printf("are %v and %v connected? %v\n", point, adjacentPoint, arePipesConnected(point, adjacentPoint))
 		if isPipeDirection && arePipesConnected(point, adjacentPoint) {
-			fmt.Printf("are %v and %v connected? %v\n", point, adjacentPoint, arePipesConnected(point, adjacentPoint))
 			foundPoints = append(foundPoints, adjacentPoint)
 		}
 	}
