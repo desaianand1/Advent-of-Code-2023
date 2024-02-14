@@ -57,13 +57,23 @@ var pipeDirectionMap = map[rune]Pipe{
 	'S': Starter,
 }
 
+var directionPipeMap = map[Pipe]rune{
+	Vertical:    '|',
+	Horizontal:  '-',
+	BottomLeft:  'L',
+	BottomRight: 'J',
+	TopRight:    '7',
+	TopLeft:     'F',
+	Starter:     'S',
+}
+
 type PipePoint struct {
 	pipe Pipe
 	i    int
 	j    int
 }
 
-type PipeLoop = []PipePoint
+type PipeLoop []PipePoint
 
 func (pipeLoop PipeLoop) toString() string {
 	maxI, maxJ := math.MinInt32, math.MinInt32
@@ -76,11 +86,27 @@ func (pipeLoop PipeLoop) toString() string {
 		}
 	}
 
-	grid := make([][]rune, maxI)
+	grid := make([][]rune, maxI+1)
 	for i := range grid {
-		grid[i] = make([]rune, maxJ)
+		grid[i] = make([]rune, maxJ+1)
 	}
-	return ""
+
+	for _, point := range pipeLoop {
+		grid[point.i][point.j] = directionPipeMap[point.pipe]
+	}
+	var finalStr string
+	for _, row := range grid {
+		for _, col := range row {
+			if col == 0 {
+				finalStr += " "
+			} else {
+				finalStr += fmt.Sprintf("%c", col)
+			}
+
+		}
+		finalStr += "\n"
+	}
+	return finalStr
 }
 
 func findPipeLoop(grid []string) PipeLoop {
@@ -123,8 +149,6 @@ func crawlPipeLoop(grid []string, point PipePoint, pipeLoop *PipeLoop, visitedPi
 			if crawlPipeLoop(grid, corner, pipeLoop, visitedPipes) {
 				return true
 			}
-		} else {
-			return false
 		}
 	}
 	return false
@@ -252,9 +276,7 @@ func checkFourCorners(grid []string, point PipePoint) []PipePoint {
 
 func runP1(lines []string) int {
 	pipeLoop := findPipeLoop(lines)
-	for _, point := range pipeLoop {
-		fmt.Printf("%v\n", point.pipe)
-	}
+	fmt.Printf("%s\n", pipeLoop.toString())
 	return -1
 }
 
