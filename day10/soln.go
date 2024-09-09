@@ -3,6 +3,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"math"
@@ -109,17 +110,23 @@ func (pipeLoop PipeLoop) toString() string {
 	return finalStr
 }
 
-func findPipeLoop(grid []string) PipeLoop {
-	var pipeLoop = PipeLoop{}
-	var starterPipe PipePoint
+func getStarterPipe(grid []string) (PipePoint, error) {
 	for i, row := range grid {
 		for j, token := range row {
 			direction, isDirection := pipeDirectionMap[token]
 			if isDirection && direction == Starter {
-				starterPipe = PipePoint{i: i, j: j, pipe: Starter}
-				break
+				return PipePoint{i: i, j: j, pipe: Starter}, nil
 			}
 		}
+	}
+	return PipePoint{i: -1, j: -1, pipe: Ground}, errors.New("no starter pipe found! ensure the provided input is valid")
+}
+
+func findPipeLoop(grid []string) PipeLoop {
+	var pipeLoop = PipeLoop{}
+	starterPipe, err := getStarterPipe(grid)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 	visitedPipes := make(map[PipePoint]bool)
 	crawlPipeLoop(grid, starterPipe, &pipeLoop, &visitedPipes)
